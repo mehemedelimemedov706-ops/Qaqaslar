@@ -94,7 +94,10 @@ function loadVideos() {
         var a = document.createElement('a');
         a.href = link;
         var img = document.createElement('img');
-        img.src = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg' width="200" height="200" style="border-radius: 5px;
+          img.src = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+          img.width = 200;
+          img.height = 200;
+          img.style.borderRadius = '5px';
         a.appendChild(img);
         container.appendChild(a);
       });
