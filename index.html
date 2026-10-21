@@ -39,5 +39,69 @@
 <a href="https://www.youtube.com/watch?v=qJKcADiAuAw">
   <img src="https://img.youtube.com/vi/qJKcADiAuAw/hqdefault.jpg" width="200" height="200" style="border-radius: 5px;">
 </a>
+
+<div id="user-videos"></div>
+
+<input type="text" id="videoLinkInput" placeholder="Вставьте ссылку на видео">
+<button onclick="submitVideo()">Добавить</button>
+
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+<script>
+function getYouTubeId(url) {
+  var match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+function submitVideo() {
+  var input = document.getElementById('videoLinkInput');
+  var url = input.value.trim();
+  var id = getYouTubeId(url);
+  if (!id) {
+    alert('Это не похоже на ссылку YouTube');
+    return;
+  }
+  var form = document.createElement('form');
+  form.action = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSeLE3jb-CUFZ138TMQaV7brlXlja3v4OhAgx82Q2rkIm_y-oQ/formResponse';
+  form.method = 'POST';
+  form.target = 'hidden_iframe';
+  var inputField = document.createElement('input');
+  inputField.type = 'hidden';
+  inputField.name = 'entry.1461823213';
+  inputField.value = url;
+  form.appendChild(inputField);
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+  input.value = '';
+  setTimeout(loadVideos, 2000);
+}
+
+function loadVideos() {
+  var container = document.getElementById('user-videos');
+  fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vR4h0xVgNRpAm-W41w2pvwI7n9s688obwyJg_fFN_nyLtSCGE4yc22xgA0II85ijn2wyNG--1rWKVkw/pub?output=csv')
+    .then(function(res) { return res.text(); })
+    .then(function(csv) {
+      var rows = csv.trim().split('\n').slice(1);
+      container.innerHTML = '';
+      rows.forEach(function(row) {
+        var cols = row.split(',');
+        var link = cols[1];
+        if (!link) return;
+        link = link.replace(/^"|"$/g, '').trim();
+        var id = getYouTubeId(link);
+        if (!id) return;
+        var a = document.createElement('a');
+        a.href = link;
+        var img = document.createElement('img');
+        img.src = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+        a.appendChild(img);
+        container.appendChild(a);
+      });
+    });
+}
+
+loadVideos();
+</script>
 </body>
 </html>
