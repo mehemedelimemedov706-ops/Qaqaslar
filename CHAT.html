@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Рабочий чат</title>
+    <title>PEYSER YIGINI</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,9 +12,9 @@
         }
 
         body { 
-            background-color: #1a1a2e; 
+            background-color: #1a001a; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            color: #e0e0e0;
+            color: #e0d0e0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,25 +26,25 @@
             width: 100%;
             max-width: 600px;
             height: 80vh;
-            background-color: #16213e;
+            background-color: #2b002b;
             border-radius: 16px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            border: 1px solid #0f3460;
+            border: 1px solid #4a004a;
         }
 
         .chat-header {
-            background-color: #0f3460;
+            background-color: #3d003d;
             padding: 20px;
             text-align: center;
-            border-bottom: 1px solid #1a1a2e;
+            border-bottom: 1px solid #5a005a;
         }
 
         .chat-header h1 {
             font-size: 1.4rem;
-            color: #e94560;
+            color: #d67ad6;
             letter-spacing: 1px;
         }
 
@@ -67,14 +67,14 @@
         }
 
         .message.received {
-            background-color: #0f3460;
-            color: #e0e0e0;
+            background-color: #4a004a;
+            color: #f3cfeb;
             align-self: flex-start;
             border-bottom-left-radius: 2px;
         }
 
         .message.sent {
-            background-color: #e94560;
+            background-color: #7b1fa2;
             color: #ffffff;
             align-self: flex-end;
             border-bottom-right-radius: 2px;
@@ -84,34 +84,34 @@
             font-size: 0.75rem;
             font-weight: bold;
             margin-bottom: 4px;
-            color: #b2bec3;
+            color: #b384b0;
         }
 
         .chat-input-area {
             padding: 15px;
-            background-color: #0f3460;
+            background-color: #3d003d;
             display: flex;
             gap: 10px;
-            border-top: 1px solid #1a1a2e;
+            border-top: 1px solid #5a005a;
         }
 
         .chat-input-area input {
             flex: 1;
             padding: 12px 16px;
             border-radius: 24px;
-            border: 1px solid #1a1a2e;
-            background-color: #16213e;
+            border: 1px solid #660055;
+            background-color: #2b002b;
             color: #ffffff;
             outline: none;
             font-size: 0.95rem;
         }
 
         .chat-input-area input::placeholder {
-            color: #7f8c8d;
+            color: #8c5387;
         }
 
         .chat-input-area button {
-            background-color: #e94560;
+            background-color: #8e24aa;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -122,7 +122,7 @@
         }
 
         .chat-input-area button:hover {
-            background-color: #ff6b6b;
+            background-color: #ab47bc;
         }
     </style>
 </head>
@@ -130,13 +130,13 @@
 
     <div class="chat-container">
         <div class="chat-header">
-            <h1>ОБЩИЙ ЧАТ</h1>
+            <h1>PEYSER QRUPU</h1>
         </div>
 
         <div class="chat-messages" id="chatMessages">
             <div class="message received">
-                <div class="author">Система</div>
-                Добро пожаловать! Напишите первое сообщение.
+                <div class="author">SYSTEM</div>
+                Добро пожаловать в чат!
             </div>
         </div>
 
@@ -158,26 +158,25 @@
             // Добавляем сообщение пользователя
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', 'sent');
-            messageDiv.innerHTML = `<div class="author">Вы</div>${escapeHtml(text)}`;
+            messageDiv.innerHTML = `<div class=\"author\">ВЫ</div>${escapeHtml(text)}`;
             messagesContainer.appendChild(messageDiv);
 
             messageInput.value = '';
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-            // Имитация автоматического ответа через 1 секунду
+            // Имитация ответа
             setTimeout(() => {
                 const replyDiv = document.createElement('div');
                 replyDiv.classList.add('message', 'received');
-                replyDiv.innerHTML = `<div class="author">Собеседник</div>Эхо: ${escapeHtml(text)}`;
+                replyDiv.innerHTML = `<div class=\"author\">БОТ</div>Эхо: ${escapeHtml(text)}`;
                 messagesContainer.appendChild(replyDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }, 1000);
         }
 
-        // Защита от XSS-инъекций при вводе текста
         function escapeHtml(str) {
             return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', \"'\": '&#39;', '\"': '&quot;' }[tag] || tag)
             );
         }
 
