@@ -1,1 +1,15 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GAU KRUQU</title>
+    <style>
+        body { background-color: #330033; font-family: sans-serif; color: #660055; }
+        a { text-decoration: none; }
+        a:link    { color: #6e135e; }
+        a:visited { color: #610251; }
+        a:hover   { color: #6e2a6a; }
+        a:active  { color: #b384b0; }
+    </style>
+</head>
+<body>
