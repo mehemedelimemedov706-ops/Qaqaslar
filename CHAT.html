@@ -127,7 +127,6 @@
   .send:disabled { opacity: .5; cursor: default; }
   button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-  /* Окно входа */
   .overlay {
     position: fixed; inset: 0; background: rgba(27, 35, 64, .55);
     display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10;
@@ -181,23 +180,13 @@
   </form>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getDatabase, ref, push, query, limitToLast, onChildAdded, serverTimestamp }
-    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-  // ============================================================
-  //  ВСТАВЬ СЮДА СВОИ ДАННЫЕ ИЗ FIREBASE
-  // ============================================================
-  const firebaseConfig = {
-    apiKey: "ВСТАВЬ_СЮДА",
-    authDomain: "ВСТАВЬ_СЮДА",
-    databaseURL: "ВСТАВЬ_СЮДА",
-    projectId: "ВСТАВЬ_СЮДА",
-    storageBucket: "ВСТАВЬ_СЮДА",
-    messagingSenderId: "ВСТАВЬ_СЮДА",
-    appId: "ВСТАВЬ_СЮДА"
-  };
+<script>
+  const FORM_URL   = "https://docs.google.com/forms/d/e/1FAIpQLSf6KMPHH1yTr_lz7OQk8rq_toJoWTF2MxO1R_X3bElUSU6TkA/formResponse";
+  const ENTRY_NAME = "entry.1070875154";
+  const ENTRY_TEXT = "entry.1549852739";
+  const ENTRY_ID   = "entry.1874645593";
+  const SHEET_ID   = "140_dIam0TjLJxRJK499kdONap3KuS-YsPj-ZSlxDwZs";
+  const POLL_MS = 5000;   // как часто проверять новые сообщения
 
   const $ = (id) => document.getElementById(id);
   const messagesEl = $("messages");
@@ -206,14 +195,10 @@
   const sendBtn = $("sendBtn");
   const warnEl = $("warn");
 
-  const configured = !String(firebaseConfig.databaseURL).includes("ВСТАВЬ");
-  if (!configured) {
-    warnEl.hidden = false;
-    warnEl.textContent = "Чат ещё не подключён к Firebase: вставь свои данные в блок firebaseConfig в файле chat.html.";
-    sendBtn.disabled = true;
-  }
+  function showWarn(msg) { warnEl.hidden = false; warnEl.textContent = msg; }
+  function hideWarn() { warnEl.hidden = true; }
 
-  // ---------- имя пользователя ----------
+  // ---------- имя ----------
   let myName = "";
   try { myName = localStorage.getItem("chatName") || ""; } catch (e) {}
 
@@ -238,7 +223,6 @@
   $("changeName").addEventListener("click", askName);
   if (myName) setName(myName); else askName();
 
-  // ---------- цвет имени ----------
   function colorFor(name) {
     let h = 0;
     for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
@@ -252,10 +236,7 @@
     const b = document.createElement("button");
     b.type = "button";
     b.textContent = em;
-    b.addEventListener("click", () => {
-      textEl.value += em;
-      textEl.focus();
-    });
+    b.addEventListener("click", () => { textEl.value += em; textEl.focus(); });
     bar.appendChild(b);
   });
   $("emojiBtn").addEventListener("click", () => bar.classList.toggle("open"));
@@ -270,9 +251,9 @@
     return d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
   }
 
-  function addMessage(id, m) {
-    if (seen.has(id)) return;
-    seen.add(id);
+  function addMessage(m) {
+    if (seen.has(m.id)) return;
+    seen.add(m.id);
     if (emptyEl.parentNode) emptyEl.remove();
 
     const mine = m.name === myName;
@@ -285,12 +266,12 @@
       const n = document.createElement("div");
       n.className = "name";
       n.textContent = m.name;
-      n.style.color = colorFor(m.name);
+      n.style.color = colorFor(String(m.name));
       row.appendChild(n);
     }
     const b = document.createElement("div");
     b.className = "bubble";
-    b.textContent = m.text;          // textContent защищает от вставки вредного кода
+    b.textContent = m.text;        // textContent защищает от вставки вредного кода
     row.appendChild(b);
 
     const t = document.createElement("div");
@@ -304,41 +285,85 @@
     if (mine || nearBottom || firstLoad) messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
-  // ---------- Firebase ----------
-  let db = null;
-  if (configured) {
+  // ---------- чтение сообщений из Google Таблицы ----------
+  function timeFromId(id) { return Number(String(id).split("-")[0]) || 0; }
+
+  let failCount = 0;
+  window.chatCallback = function (resp) {
     try {
-      const app = initializeApp(firebaseConfig);
-      db = getDatabase(app);
-      const q = query(ref(db, "messages"), limitToLast(100));
-      onChildAdded(q, (snap) => addMessage(snap.key, snap.val()));
-      setTimeout(() => { firstLoad = false; messagesEl.scrollTop = messagesEl.scrollHeight; }, 1500);
-    } catch (err) {
-      warnEl.hidden = false;
-      warnEl.textContent = "Не удалось подключиться к Firebase. Проверь данные в firebaseConfig.";
-    }
+      const rows = (resp.table && resp.table.rows) || [];
+      const list = rows.map((r) => {
+        const c = r.c || [];
+        const id = c[2] && c[2].v != null ? String(c[2].v) : "";
+        return {
+          name: c[0] && c[0].v != null ? String(c[0].v) : "",
+          text: c[1] && c[1].v != null ? String(c[1].v) : "",
+          id: id,
+          time: timeFromId(id)
+        };
+      }).filter((m) => m.name && m.text && m.id);
+      list.sort((a, b) => a.time - b.time).forEach(addMessage);
+      firstLoad = false;
+      failCount = 0;
+      hideWarn();
+    } catch (e) { failCount++; }
+  };
+
+  function loadMessages() {
+    return new Promise((resolve) => {
+      const q = encodeURIComponent("select B,C,D order by A desc limit 100");
+      const s = document.createElement("script");
+      s.src = "https://docs.google.com/spreadsheets/d/" + SHEET_ID +
+              "/gviz/tq?tqx=out:json;responseHandler:chatCallback&tq=" + q +
+              "&_=" + Date.now();
+      s.onload = () => { s.remove(); resolve(); };
+      s.onerror = () => {
+        s.remove();
+        failCount++;
+        if (failCount >= 3) showWarn("Не удаётся прочитать таблицу. Проверь, что у таблицы доступ «Все, у кого есть ссылка».");
+        resolve();
+      };
+      document.head.appendChild(s);
+    });
   }
 
-  // ---------- отправка ----------
+  async function poll() {
+    if (!document.hidden) await loadMessages();
+    setTimeout(poll, POLL_MS);
+  }
+  poll();
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) loadMessages();
+  });
+
+  // ---------- отправка через Google Форму ----------
   let lastSent = 0;
   async function send() {
     const text = textEl.value.trim();
-    if (!text || !db) return;
+    if (!text) return;
     if (!myName) { askName(); return; }
     const now = Date.now();
-    if (now - lastSent < 800) return;           // защита от спама
+    if (now - lastSent < 800) return;          // защита от спама
     lastSent = now;
     textEl.value = "";
     autoGrow();
+
+    const msg = {
+      id: now + "-" + Math.random().toString(36).slice(2, 8),
+      name: myName,
+      text: text.slice(0, 500),
+      time: now
+    };
+    addMessage(msg);                            // сразу показываем у себя
+
+    const body = new URLSearchParams();
+    body.append(ENTRY_NAME, msg.name);
+    body.append(ENTRY_TEXT, msg.text);
+    body.append(ENTRY_ID, msg.id);
     try {
-      await push(ref(db, "messages"), {
-        name: myName,
-        text: text.slice(0, 500),
-        time: serverTimestamp()
-      });
+      await fetch(FORM_URL, { method: "POST", mode: "no-cors", body: body });
     } catch (err) {
-      warnEl.hidden = false;
-      warnEl.textContent = "Сообщение не отправилось. Проверь правила базы данных в Firebase.";
+      showWarn("Сообщение не отправилось. Проверь интернет.");
     }
   }
 
