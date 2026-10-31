@@ -8,14 +8,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #e9f0ff;
-    --panel: #ffffff;
-    --ink: #1b2340;
-    --muted: #6b7699;
-    --me: #2d5bff;
+    --bg: #2b002f;          /* самый тёмный фон за чатом */
+    --panel: #36003a;       /* основной фон (как на сайте) */
+    --panel-2: #470050;     /* чуть светлее: поле ввода, чужие сообщения */
+    --ink: #f3d9f7;         /* основной текст */
+    --muted: #a04aa8;       /* приглушённый сиреневый */
+    --me: #7a1a8f;          /* мои сообщения */
     --me-ink: #ffffff;
-    --accent: #ff6b57;
-    --line: #d5dff5;
+    --accent: #b020c0;      /* кнопка отправки */
+    --line: #6a0a6e;        /* рамки */
+    --glow: rgba(200, 60, 220, .35);
   }
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; }
@@ -33,22 +35,27 @@
     display: flex;
     flex-direction: column;
     background: var(--panel);
-    box-shadow: 0 0 40px rgba(45, 91, 255, .12);
+    box-shadow: 0 0 50px rgba(160, 20, 180, .35);
   }
   header {
     padding: 14px 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 2px solid var(--line);
     background: var(--panel);
   }
-  header h1 { font-size: 20px; font-weight: 800; margin: 0; }
-  header .who { font-size: 14px; color: var(--muted); }
-  header button.link {
-    background: none; border: none; color: var(--me); font: inherit;
-    font-weight: 600; cursor: pointer; padding: 0 0 0 8px;
+  header h1 {
+    font-size: 20px; font-weight: 800; margin: 0;
+    text-transform: uppercase; letter-spacing: .5px; color: #d36be0;
   }
+  header .who { font-size: 14px; color: var(--muted); }
+  header .who b { color: var(--ink); }
+  header button.link {
+    background: none; border: none; color: #d36be0; font: inherit;
+    font-weight: 800; cursor: pointer; padding: 0 0 0 8px;
+  }
+  header button.link:hover { color: #fff; }
   #messages {
     flex: 1;
     overflow-y: auto;
@@ -57,12 +64,13 @@
     flex-direction: column;
     gap: 6px;
     background: var(--bg);
+    scrollbar-color: var(--line) var(--bg);
   }
-  .empty { margin: auto; color: var(--muted); text-align: center; }
+  .empty { margin: auto; color: var(--muted); text-align: center; font-weight: 800; }
   .row { display: flex; flex-direction: column; max-width: 78%; }
   .row.mine { align-self: flex-end; align-items: flex-end; }
   .row.theirs { align-self: flex-start; align-items: flex-start; }
-  .name { font-size: 13px; font-weight: 800; margin: 8px 4px 2px; }
+  .name { font-size: 13px; font-weight: 800; margin: 8px 4px 2px; text-transform: uppercase; }
   .bubble {
     padding: 9px 14px;
     border-radius: 18px;
@@ -72,8 +80,17 @@
     white-space: pre-wrap;
     font-size: 16px;
   }
-  .theirs .bubble { background: #fff; border-bottom-left-radius: 5px; box-shadow: 0 1px 2px rgba(27, 35, 64, .08); }
-  .mine .bubble { background: var(--me); color: var(--me-ink); border-bottom-right-radius: 5px; }
+  .theirs .bubble {
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-bottom-left-radius: 5px;
+  }
+  .mine .bubble {
+    background: var(--me);
+    color: var(--me-ink);
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 0 14px var(--glow);
+  }
   .time { font-size: 11px; color: var(--muted); margin: 2px 6px 0; }
   .pop { animation: pop .18s ease-out; }
   @keyframes pop { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -84,7 +101,7 @@
     flex-wrap: wrap;
     gap: 4px;
     padding: 8px 14px;
-    border-top: 1px solid var(--line);
+    border-top: 2px solid var(--line);
     background: var(--panel);
   }
   .emoji-bar.open { display: flex; }
@@ -92,13 +109,13 @@
     font-size: 22px; background: none; border: none; cursor: pointer;
     border-radius: 8px; padding: 2px 5px;
   }
-  .emoji-bar button:hover { background: var(--bg); }
+  .emoji-bar button:hover { background: var(--panel-2); }
 
   form.composer {
     display: flex;
     gap: 8px;
     padding: 12px 14px;
-    border-top: 1px solid var(--line);
+    border-top: 2px solid var(--line);
     background: var(--panel);
     align-items: flex-end;
   }
@@ -113,41 +130,51 @@
     border-radius: 20px;
     outline: none;
     color: var(--ink);
+    background: #200024;
   }
-  form.composer textarea:focus { border-color: var(--me); }
+  form.composer textarea::placeholder { color: var(--muted); }
+  form.composer textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--glow); }
   .icon-btn {
-    width: 44px; height: 44px; border-radius: 50%; border: none;
-    background: var(--bg); font-size: 22px; cursor: pointer; flex: none;
+    width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--line);
+    background: var(--panel-2); font-size: 22px; cursor: pointer; flex: none;
   }
+  .icon-btn:hover { border-color: var(--accent); }
   .send {
     height: 44px; padding: 0 20px; border: none; border-radius: 22px;
     background: var(--accent); color: #fff; font: inherit; font-weight: 800;
+    text-transform: uppercase; letter-spacing: .5px;
     cursor: pointer; flex: none;
   }
+  .send:hover { background: #c83cd8; }
   .send:disabled { opacity: .5; cursor: default; }
-  button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 3px solid #e06cf0; outline-offset: 2px; }
 
   .overlay {
-    position: fixed; inset: 0; background: rgba(27, 35, 64, .55);
+    position: fixed; inset: 0; background: rgba(20, 0, 24, .8);
     display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10;
   }
   .overlay[hidden] { display: none; }
   .card {
-    background: #fff; border-radius: 20px; padding: 28px; width: 100%; max-width: 380px;
+    background: var(--panel); border: 2px solid var(--line); border-radius: 20px;
+    padding: 28px; width: 100%; max-width: 380px;
+    box-shadow: 0 0 40px var(--glow);
   }
-  .card h2 { margin: 0 0 6px; font-size: 24px; }
+  .card h2 { margin: 0 0 6px; font-size: 24px; color: #d36be0; }
   .card p { margin: 0 0 18px; color: var(--muted); }
   .card input {
     width: 100%; font: inherit; font-size: 17px; padding: 12px 14px;
     border: 2px solid var(--line); border-radius: 14px; margin-bottom: 14px;
+    background: #200024; color: var(--ink);
   }
   .card button {
-    width: 100%; height: 48px; border: none; border-radius: 14px; background: var(--me);
+    width: 100%; height: 48px; border: none; border-radius: 14px; background: var(--accent);
     color: #fff; font: inherit; font-weight: 800; font-size: 17px; cursor: pointer;
+    text-transform: uppercase;
   }
+  .card button:hover { background: #c83cd8; }
   .warn {
-    background: #fff3d6; color: #6a4b00; padding: 12px 16px; font-size: 14px;
-    border-bottom: 1px solid #f0d890;
+    background: #4a0a3a; color: #ffc6f2; padding: 12px 16px; font-size: 14px;
+    border-bottom: 1px solid var(--line);
   }
   .warn[hidden] { display: none; }
 </style>
@@ -223,10 +250,11 @@
   $("changeName").addEventListener("click", askName);
   if (myName) setName(myName); else askName();
 
+  // цвета имён — светлые, чтобы читались на тёмно-фиолетовом фоне
   function colorFor(name) {
     let h = 0;
     for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
-    return `hsl(${h}, 65%, 38%)`;
+    return `hsl(${h}, 70%, 70%)`;
   }
 
   // ---------- смайлики ----------
