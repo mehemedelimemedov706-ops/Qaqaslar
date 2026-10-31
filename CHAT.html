@@ -1,191 +1,356 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PEYSER YIGINI</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Чат Qaqaslar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #e9f0ff;
+    --panel: #ffffff;
+    --ink: #1b2340;
+    --muted: #6b7699;
+    --me: #2d5bff;
+    --me-ink: #ffffff;
+    --accent: #ff6b57;
+    --line: #d5dff5;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+  }
+  .app {
+    width: 100%;
+    max-width: 720px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--panel);
+    box-shadow: 0 0 40px rgba(45, 91, 255, .12);
+  }
+  header {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+  }
+  header h1 { font-size: 20px; font-weight: 800; margin: 0; }
+  header .who { font-size: 14px; color: var(--muted); }
+  header button.link {
+    background: none; border: none; color: var(--me); font: inherit;
+    font-weight: 600; cursor: pointer; padding: 0 0 0 8px;
+  }
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: var(--bg);
+  }
+  .empty { margin: auto; color: var(--muted); text-align: center; }
+  .row { display: flex; flex-direction: column; max-width: 78%; }
+  .row.mine { align-self: flex-end; align-items: flex-end; }
+  .row.theirs { align-self: flex-start; align-items: flex-start; }
+  .name { font-size: 13px; font-weight: 800; margin: 8px 4px 2px; }
+  .bubble {
+    padding: 9px 14px;
+    border-radius: 18px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    font-size: 16px;
+  }
+  .theirs .bubble { background: #fff; border-bottom-left-radius: 5px; box-shadow: 0 1px 2px rgba(27, 35, 64, .08); }
+  .mine .bubble { background: var(--me); color: var(--me-ink); border-bottom-right-radius: 5px; }
+  .time { font-size: 11px; color: var(--muted); margin: 2px 6px 0; }
+  .pop { animation: pop .18s ease-out; }
+  @keyframes pop { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .pop { animation: none; } }
 
-        body { 
-            background-color: #1a001a; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            color: #e0d0e0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+  .emoji-bar {
+    display: none;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px 14px;
+    border-top: 1px solid var(--line);
+    background: var(--panel);
+  }
+  .emoji-bar.open { display: flex; }
+  .emoji-bar button {
+    font-size: 22px; background: none; border: none; cursor: pointer;
+    border-radius: 8px; padding: 2px 5px;
+  }
+  .emoji-bar button:hover { background: var(--bg); }
 
-        .chat-container {
-            width: 100%;
-            max-width: 600px;
-            height: 80vh;
-            background-color: #2b002b;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid #4a004a;
-        }
+  form.composer {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--line);
+    background: var(--panel);
+    align-items: flex-end;
+  }
+  form.composer textarea {
+    flex: 1;
+    resize: none;
+    max-height: 120px;
+    font: inherit;
+    font-size: 16px;
+    padding: 10px 14px;
+    border: 2px solid var(--line);
+    border-radius: 20px;
+    outline: none;
+    color: var(--ink);
+  }
+  form.composer textarea:focus { border-color: var(--me); }
+  .icon-btn {
+    width: 44px; height: 44px; border-radius: 50%; border: none;
+    background: var(--bg); font-size: 22px; cursor: pointer; flex: none;
+  }
+  .send {
+    height: 44px; padding: 0 20px; border: none; border-radius: 22px;
+    background: var(--accent); color: #fff; font: inherit; font-weight: 800;
+    cursor: pointer; flex: none;
+  }
+  .send:disabled { opacity: .5; cursor: default; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-        .chat-header {
-            background-color: #3d003d;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #5a005a;
-        }
-
-        .chat-header h1 {
-            font-size: 1.4rem;
-            color: #d67ad6;
-            letter-spacing: 1px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .message {
-            max-width: 75%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            line-height: 1.4;
-            font-size: 0.95rem;
-            word-wrap: break-word;
-        }
-
-        .message.received {
-            background-color: #4a004a;
-            color: #f3cfeb;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-        }
-
-        .message.sent {
-            background-color: #7b1fa2;
-            color: #ffffff;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-
-        .author {
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-bottom: 4px;
-            color: #b384b0;
-        }
-
-        .chat-input-area {
-            padding: 15px;
-            background-color: #3d003d;
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid #5a005a;
-        }
-
-        .chat-input-area input {
-            flex: 1;
-            padding: 12px 16px;
-            border-radius: 24px;
-            border: 1px solid #660055;
-            background-color: #2b002b;
-            color: #ffffff;
-            outline: none;
-            font-size: 0.95rem;
-        }
-
-        .chat-input-area input::placeholder {
-            color: #8c5387;
-        }
-
-        .chat-input-area button {
-            background-color: #8e24aa;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 24px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-
-        .chat-input-area button:hover {
-            background-color: #ab47bc;
-        }
-    </style>
+  /* Окно входа */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(27, 35, 64, .55);
+    display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10;
+  }
+  .overlay[hidden] { display: none; }
+  .card {
+    background: #fff; border-radius: 20px; padding: 28px; width: 100%; max-width: 380px;
+  }
+  .card h2 { margin: 0 0 6px; font-size: 24px; }
+  .card p { margin: 0 0 18px; color: var(--muted); }
+  .card input {
+    width: 100%; font: inherit; font-size: 17px; padding: 12px 14px;
+    border: 2px solid var(--line); border-radius: 14px; margin-bottom: 14px;
+  }
+  .card button {
+    width: 100%; height: 48px; border: none; border-radius: 14px; background: var(--me);
+    color: #fff; font: inherit; font-weight: 800; font-size: 17px; cursor: pointer;
+  }
+  .warn {
+    background: #fff3d6; color: #6a4b00; padding: 12px 16px; font-size: 14px;
+    border-bottom: 1px solid #f0d890;
+  }
+  .warn[hidden] { display: none; }
+</style>
 </head>
 <body>
 
-    <div class="chat-container">
-        <div class="chat-header">
-            <h1>PEYSER QRUPU</h1>
-        </div>
+<div class="app">
+  <header>
+    <h1>💬 Чат Qaqaslar</h1>
+    <div class="who">Ты: <b id="whoName">—</b><button class="link" id="changeName" type="button">сменить</button></div>
+  </header>
+  <div class="warn" id="warn" hidden></div>
+  <div id="messages" aria-live="polite">
+    <div class="empty" id="empty">Пока тихо. Напиши первое сообщение!</div>
+  </div>
+  <div class="emoji-bar" id="emojiBar"></div>
+  <form class="composer" id="composer" autocomplete="off">
+    <button class="icon-btn" id="emojiBtn" type="button" aria-label="Смайлики">😊</button>
+    <textarea id="text" rows="1" maxlength="500" placeholder="Напиши сообщение…"></textarea>
+    <button class="send" id="sendBtn" type="submit">Отправить</button>
+  </form>
+</div>
 
-        <div class="chat-messages" id="chatMessages">
-            <div class="message received">
-                <div class="author">SYSTEM</div>
-                Добро пожаловать в чат!
-            </div>
-        </div>
+<div class="overlay" id="login" hidden>
+  <form class="card" id="loginForm">
+    <h2>Привет! 👋</h2>
+    <p>Как тебя зовут в чате?</p>
+    <input id="nameInput" maxlength="20" placeholder="Твоё имя" required>
+    <button type="submit">Войти в чат</button>
+  </form>
+</div>
 
-        <div class="chat-input-area">
-            <input type="text" id="messageInput" placeholder="Введите сообщение...">
-            <button id="sendButton">Отправить</button>
-        </div>
-    </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, push, query, limitToLast, onChildAdded, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-    <script>
-        const messagesContainer = document.getElementById('chatMessages');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
+  // ============================================================
+  //  ВСТАВЬ СЮДА СВОИ ДАННЫЕ ИЗ FIREBASE
+  // ============================================================
+  const firebaseConfig = {
+    apiKey: "ВСТАВЬ_СЮДА",
+    authDomain: "ВСТАВЬ_СЮДА",
+    databaseURL: "ВСТАВЬ_СЮДА",
+    projectId: "ВСТАВЬ_СЮДА",
+    storageBucket: "ВСТАВЬ_СЮДА",
+    messagingSenderId: "ВСТАВЬ_СЮДА",
+    appId: "ВСТАВЬ_СЮДА"
+  };
 
-        function sendMessage() {
-            const text = messageInput.value.trim();
-            if (!text) return;
+  const $ = (id) => document.getElementById(id);
+  const messagesEl = $("messages");
+  const emptyEl = $("empty");
+  const textEl = $("text");
+  const sendBtn = $("sendBtn");
+  const warnEl = $("warn");
 
-            // Добавляем сообщение пользователя
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', 'sent');
-            messageDiv.innerHTML = `<div class=\"author\">ВЫ</div>${escapeHtml(text)}`;
-            messagesContainer.appendChild(messageDiv);
+  const configured = !String(firebaseConfig.databaseURL).includes("ВСТАВЬ");
+  if (!configured) {
+    warnEl.hidden = false;
+    warnEl.textContent = "Чат ещё не подключён к Firebase: вставь свои данные в блок firebaseConfig в файле chat.html.";
+    sendBtn.disabled = true;
+  }
 
-            messageInput.value = '';
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  // ---------- имя пользователя ----------
+  let myName = "";
+  try { myName = localStorage.getItem("chatName") || ""; } catch (e) {}
 
-            // Имитация ответа
-            setTimeout(() => {
-                const replyDiv = document.createElement('div');
-                replyDiv.classList.add('message', 'received');
-                replyDiv.innerHTML = `<div class=\"author\">БОТ</div>Эхо: ${escapeHtml(text)}`;
-                messagesContainer.appendChild(replyDiv);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }, 1000);
-        }
+  function setName(name) {
+    myName = name.trim().slice(0, 20);
+    try { localStorage.setItem("chatName", myName); } catch (e) {}
+    $("whoName").textContent = myName || "—";
+  }
+  function askName() {
+    $("nameInput").value = myName;
+    $("login").hidden = false;
+    $("nameInput").focus();
+  }
+  $("loginForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const v = $("nameInput").value.trim();
+    if (!v) return;
+    setName(v);
+    $("login").hidden = true;
+    textEl.focus();
+  });
+  $("changeName").addEventListener("click", askName);
+  if (myName) setName(myName); else askName();
 
-        function escapeHtml(str) {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', \"'\": '&#39;', '\"': '&quot;' }[tag] || tag)
-            );
-        }
+  // ---------- цвет имени ----------
+  function colorFor(name) {
+    let h = 0;
+    for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
+    return `hsl(${h}, 65%, 38%)`;
+  }
 
-        sendButton.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-    </script>
+  // ---------- смайлики ----------
+  const emojis = ["😀","😂","🤣","😍","😎","🥳","😭","😡","👍","👎","🙏","🔥","❤️","💔","🎉","🤝","😴","🤔","🙌","👀","⚽","🎮","🍕","☕"];
+  const bar = $("emojiBar");
+  emojis.forEach((em) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = em;
+    b.addEventListener("click", () => {
+      textEl.value += em;
+      textEl.focus();
+    });
+    bar.appendChild(b);
+  });
+  $("emojiBtn").addEventListener("click", () => bar.classList.toggle("open"));
+
+  // ---------- вывод сообщений ----------
+  const seen = new Set();
+  let lastAuthor = null;
+  let firstLoad = true;
+
+  function timeStr(ts) {
+    const d = new Date(ts || Date.now());
+    return d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+  }
+
+  function addMessage(id, m) {
+    if (seen.has(id)) return;
+    seen.add(id);
+    if (emptyEl.parentNode) emptyEl.remove();
+
+    const mine = m.name === myName;
+    const nearBottom = messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 120;
+
+    const row = document.createElement("div");
+    row.className = "row " + (mine ? "mine" : "theirs") + (firstLoad ? "" : " pop");
+
+    if (!mine && lastAuthor !== m.name) {
+      const n = document.createElement("div");
+      n.className = "name";
+      n.textContent = m.name;
+      n.style.color = colorFor(m.name);
+      row.appendChild(n);
+    }
+    const b = document.createElement("div");
+    b.className = "bubble";
+    b.textContent = m.text;          // textContent защищает от вставки вредного кода
+    row.appendChild(b);
+
+    const t = document.createElement("div");
+    t.className = "time";
+    t.textContent = timeStr(m.time);
+    row.appendChild(t);
+
+    messagesEl.appendChild(row);
+    lastAuthor = m.name;
+
+    if (mine || nearBottom || firstLoad) messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  // ---------- Firebase ----------
+  let db = null;
+  if (configured) {
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getDatabase(app);
+      const q = query(ref(db, "messages"), limitToLast(100));
+      onChildAdded(q, (snap) => addMessage(snap.key, snap.val()));
+      setTimeout(() => { firstLoad = false; messagesEl.scrollTop = messagesEl.scrollHeight; }, 1500);
+    } catch (err) {
+      warnEl.hidden = false;
+      warnEl.textContent = "Не удалось подключиться к Firebase. Проверь данные в firebaseConfig.";
+    }
+  }
+
+  // ---------- отправка ----------
+  let lastSent = 0;
+  async function send() {
+    const text = textEl.value.trim();
+    if (!text || !db) return;
+    if (!myName) { askName(); return; }
+    const now = Date.now();
+    if (now - lastSent < 800) return;           // защита от спама
+    lastSent = now;
+    textEl.value = "";
+    autoGrow();
+    try {
+      await push(ref(db, "messages"), {
+        name: myName,
+        text: text.slice(0, 500),
+        time: serverTimestamp()
+      });
+    } catch (err) {
+      warnEl.hidden = false;
+      warnEl.textContent = "Сообщение не отправилось. Проверь правила базы данных в Firebase.";
+    }
+  }
+
+  $("composer").addEventListener("submit", (e) => { e.preventDefault(); send(); });
+  textEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+  });
+  function autoGrow() {
+    textEl.style.height = "auto";
+    textEl.style.height = Math.min(textEl.scrollHeight, 120) + "px";
+  }
+  textEl.addEventListener("input", autoGrow);
+</script>
 </body>
 </html>
