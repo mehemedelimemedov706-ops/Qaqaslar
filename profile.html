@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GAU KRUQU</title>
+    <link rel="shortcut icon" href="https://www.youtube.com/s/desktop/a2c91c03/img/favicon.ico" type="image/x-icon">
+    <style>
+        body { background-color: #330033; font-family: sans-serif; color: #660055; }
+        a { text-decoration: none; }
+        a:link    { color: #6e135e; }
+        a:visited { color: #610251; }
+        a:hover   { color: #6e2a6a; }
+        a:active  { color: #b384b0; }
+    </style>
+</head>
+<body vlink="#660066" alink="#600099">
+    <h2 style="text-align: center; font-size: 67px;"> OGLAN KRUQU </h2>
+    <center>
+    <img src="Github Photos/67.jpg" width="450" height="450" alt="Фотография" align="middle" style="border-radius: 50px;" border="7px solid #660066;">
+    </center>
+    <ul style="font-size: 30px;"><b>
+    <li><a href="https://www.youtube.com/@DAMN_52">N1HAT</a></li>
+    <li><a href="https://www.youtube.com/@magaedit_3">M4G4</a></li>
+    <li><a href="https://vt.tiktok.com/ZSgFGJrBo/">NER1</a></li>
+    <li><a href="https://www.instagram.com/elfat6767?dlrf=MTQ0OTh3N2pvNjB2eA==">3LF4T</a></li>
+    <li><a href="https://www.instagram.com/1imanovv__?mdxt=cXVleXEwcjZyZjNr">M0S1</a></li>
+    <li><a href="https://www.instagram.com/13_bagirov?xtok=dXIzb3IxYjhnZno5">BEQ1</a></li>
+    <li><a href="https://www.youtube.com/watch?v=NS9z2QHcZdY">SAB1R</a></li>
+    <li><a href="https://www.tiktok.com/@cfozy?_r=1&_t=ZS-9AeqngjrSRI">FER1D</a></li>
+    </ul></b>
+<center><p style="margin: 80px 0px 80px 0px;">
+<a href="https://mehemedelimemedov706-ops.github.io/Qaqaslar/CHAT.html" target="_blank" style="display: inline-block; height: 100px; line-height: 100px; padding: 0 50px; font-size: 50px; font-weight: bold; background-color: #660066; color: white; text-decoration: none; border-radius: 15px; cursor: pointer;">CHAT</a>
+</p></center>
+<h1 font-size="150">MUSIC:</h1>
+<a href="https://www.youtube.com/watch?v=N9ZjkSrsZRA">
+  <img src="https://img.youtube.com/vi/N9ZjkSrsZRA/hqdefault.jpg" width="200" height="200" style="border-radius: 5px;">
+</a>
+<a href="https://www.youtube.com/watch?v=PP56cWLrjo0&list=RDPP56cWLrjo0&start_radio=1">
+  <img src="https://img.youtube.com/vi/PP56cWLrjo0/hqdefault.jpg" width="200" height="200" style="border-radius: 5px;">
+</a>
+<a href="https://www.youtube.com/watch?v=J40D-VZ8GFM&list=RDJ40D-VZ8GFM&start_radio=1">
+  <img src="https://img.youtube.com/vi/J40D-VZ8GFM/hqdefault.jpg" width="200" height="200" style="border-radius: 5px;">
+</a>
+<a href="https://youtu.be/YGzSVVnDEnY?si=2_vyTlk8Qk92l3av">
+  <img src="https://img.youtube.com/vi/YGzSVVnDEnY/hqdefault.jpg" width="200" height="200" style="border-radius: 5px;">
+</a>
+<a href="https://www.youtube.com/watch?v=qJKcADiAuAw">
+  <img src="https://img.youtube.com/vi/qJKcADiAuAw/hqdefault.jpg" width="200" height="200" style="border-radius: 5px;">
+</a>
+
+<div id="user-videos"></div>
+    
+<center>
+<input type="text" id="videoLinkInput" placeholder="ССЫЛКУ СЮДА" style="width: 500px; height: 50px; color: #cc66bb; background-color: #1a001a;border: 3px solid #660066; border-radius: 15px; padding: 0 15px; outline: none; font-size: 22px;">
+<button onclick="submitVideo()" style="height: 50px; padding: 0 25px; font-size: 22px; font-weight: bold; background-color: #660066; color: white; border: none; border-radius: 15px; cursor: pointer;">ЕБАШЬ</button>
+</center>
+    
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+<script>
+function getYouTubeId(url) {
+  var match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+function submitVideo() {
+  var input = document.getElementById('videoLinkInput');
+  var url = input.value.trim();
+  var id = getYouTubeId(url);
+  if (!id) {
+    alert('Это не похоже на ссылку YouTube');
+    return;
+  }
+  var form = document.createElement('form');
+  form.action = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSeLE3jb-CUFZ138TMQaV7brlXlja3v4OhAgx82Q2rkIm_y-oQ/formResponse';
+  form.method = 'POST';
+  form.target = 'hidden_iframe';
+  var inputField = document.createElement('input');
+  inputField.type = 'hidden';
+  inputField.name = 'entry.1461823213';
+  inputField.value = url;
+  form.appendChild(inputField);
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+  input.value = '';
+  setTimeout(loadVideos, 2000);
+}
+
+function loadVideos() {
+  var container = document.getElementById('user-videos');
+  fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vR4h0xVgNRpAm-W41w2pvwI7n9s688obwyJg_fFN_nyLtSCGE4yc22xgA0II85ijn2wyNG--1rWKVkw/pub?output=csv')
+    .then(function(res) { return res.text(); })
+    .then(function(csv) {
+      var rows = csv.trim().split('\n').slice(1);
+      container.innerHTML = '';
+      rows.forEach(function(row) {
+        var cols = row.split(',');
+        var link = cols[1];
+        if (!link) return;
+        link = link.replace(/^"|"$/g, '').trim();
+        var id = getYouTubeId(link);
+        if (!id) return;
+        var a = document.createElement('a');
+        a.href = link;
+        var img = document.createElement('img');
+          img.src = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+          img.width = 200;
+          img.height = 200;
+          img.style.borderRadius = '5px';
+        a.appendChild(img);
+        container.appendChild(a);
+      });
+    });
+}
+
+loadVideos();
+</script>
+<a href=https://claude.ai/new>BABA</a>
+<a href="C:\Users\Lenovo ThinkPad t14s\OneDrive\Documents\Custom Office Templates\jgd.pptx">QAQAS</a>
+<center>
+    <p><p><a href="https://dalink.to/n1hat" target="_blank" style="display: inline-block; height: 50px; line-height: 50px; padding: 0 25px; font-size: 22px; font-weight: bold; background-color: #660066; color: white; text-decoration: none; border-radius: 15px; text-align: enter; cursor: pointer;">ДАЛИНК НИХАТА ДЛЯ БУДУЩИХ ПРИКОЛОВ</a></p></p>
+    <p><a href="https://dalink.to/mamedov67" target="_blank" style="display: inline-block; height: 50px; line-height: 50px; padding: 0 25px; font-size: 22px; font-weight: bold; background-color: #660066; color: white; text-decoration: none; border-radius: 15px; text-align: enter; cursor: pointer;">СОБИРАЕМ БАБЛО ДЛЯ ПОДДЕРЖКИ ПРОГРЕССА(МАГА)</a></p>
+</center>
+
+<!-- ============================================================ -->
+<!-- ============ ПРОФИЛИ: ИКОНКА В УГЛУ + ОКНО ================= -->
+<!-- ============================================================ -->
+<style>
+  #pf-fab { position: fixed; top: 15px; right: 15px; width: 56px; height: 56px; border-radius: 50%;
+            background: #660066; border: 3px solid #e9c6e4; color: #fff; font: bold 24px sans-serif;
+            cursor: pointer; z-index: 9998; display: flex; align-items: center; justify-content: center;
+            padding: 0; box-shadow: 0 2px 10px rgba(0,0,0,.6); }
+  #pf-fab:hover { background: #8a008a; }
+  #pf-fab svg { width: 30px; height: 30px; fill: #fff; }
+
+  #pf-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+              background: rgba(0,0,0,.75); z-index: 9999; align-items: flex-start; justify-content: center;
+              padding: 20px 10px; box-sizing: border-box; overflow-y: auto; }
+  #pf-panel { position: relative; background: #1a001a; border: 3px solid #660066; border-radius: 15px;
+              padding: 20px; width: 100%; max-width: 900px; color: #e9c6e4; box-sizing: border-box;
+              font-family: sans-serif; }
+  #pf-panel h2, #pf-panel h3 { color: #e9c6e4; margin: 8px 0; }
+  #pf-panel a:link, #pf-panel a:visited { color: #d48fcb; cursor: pointer; }
+  #pf-panel a:hover { color: #fff; }
+  #pf-close { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; padding: 0; font-size: 22px; }
+  #pf-panel input, #pf-panel textarea { background: #330033; color: #e9c6e4; border: 2px solid #660066;
+              border-radius: 10px; padding: 10px; font: inherit; max-width: 100%; box-sizing: border-box;
+              margin: 4px 0; outline: none; }
+  #pf-panel button { background: #660066; color: #fff; border: 0; border-radius: 10px; padding: 10px 18px;
+              font: inherit; font-weight: bold; cursor: pointer; margin: 4px 2px; }
+  #pf-panel button:hover { background: #8a008a; }
+  #pf-panel button:disabled { opacity: .5; cursor: default; }
+  #pf-panel button.pf-del { background: #a01030; }
+  #pf-panel button.pf-tab.on { background: #b000b0; }
+  .pf-nav { padding-right: 50px; margin-bottom: 10px; }
+  .pf-box { border: 2px solid #660066; border-radius: 12px; padding: 15px; margin: 15px 0; }
+  .pf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+  .pf-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; display: block; }
+  .pf-grid p { margin: 6px 0; }
+  .pf-err { color: #ff8080; }
+</style>
+
+<button id="pf-fab" type="button" title="Профиль" aria-label="Профиль"></button>
+
+<div id="pf-modal">
+  <div id="pf-panel">
+    <button id="pf-close" type="button" aria-label="Закрыть">✕</button>
+    <div id="pf-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function () {
+  // ====== ВСТАВЬТЕ СВОИ ДАННЫЕ из Supabase (Project Settings -> API) ======
+  var SUPABASE_URL = 'https://ВАШ-ПРОЕКТ.supabase.co';
+  var SUPABASE_KEY = 'ВАШ_ANON_PUBLIC_KEY';
+  // =========================================================================
+
+  var fab = document.getElementById('pf-fab');
+  var modal = document.getElementById('pf-modal');
+  var body = document.getElementById('pf-body');
+  var USER_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.4 0-8 2.2-8 5v3h16v-3c0-2.8-3.6-5-8-5z"/></svg>';
+
+  var sb = null, me = null, myName = null, token = 0;
+  var view = { type: 'me' };
+  var configured = SUPABASE_URL.indexOf('ВАШ') === -1 && SUPABASE_KEY.indexOf('ВАШ') === -1;
+  if (configured && window.supabase) {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+
+  function el(tag, props) {
+    var e = document.createElement(tag);
+    if (props) Object.assign(e, props);
+    for (var i = 2; i < arguments.length; i++) {
+      [].concat(arguments[i]).forEach(function (k) { e.append(k); });
+    }
+    return e;
+  }
+  function uid() {
+    return (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+      : Date.now() + '-' + Math.random().toString(36).slice(2);
+  }
+  function ok(res) { if (res.error) throw res.error; return res.data; }
+  function photoUrl(path) { return sb.storage.from('photos').getPublicUrl(path).data.publicUrl; }
+  function link(text, fn) {
+    return el('a', { href: '#', textContent: text, onclick: function (e) { e.preventDefault(); fn(); } });
+  }
+
+  // ---------- иконка ----------
+  function updateFab() {
+    if (me && myName) { fab.textContent = myName.charAt(0).toUpperCase(); }
+    else { fab.innerHTML = USER_ICON; }
+  }
+  updateFab();
+
+  async function loadMe() {
+    var s = await sb.auth.getSession();
+    me = s.data && s.data.session ? s.data.session.user : null;
+    myName = null;
+    if (me) {
+      var r = await sb.from('profiles').select('username').eq('id', me.id).maybeSingle();
+      myName = r.data ? r.data.username : null;
+    }
+    updateFab();
+  }
+
+  // ---------- открыть / закрыть ----------
+  function openModal() {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    render();
+  }
+  function closeModal() {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  fab.addEventListener('click', openModal);
+  document.getElementById('pf-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  if (!sb) {
+    fab.addEventListener('click', function () {
+      body.replaceChildren(el('p', {
+        textContent: configured ? 'Не удалось загрузить профили. Обновите страницу.' : 'Профили скоро заработают.'
+      }));
+    });
+    return;
+  }
+  loadMe().catch(function () {});
+
+  // ---------- вход / регистрация ----------
+  function authBox() {
+    var u = el('input', { placeholder: 'Имя (для регистрации)', maxLength: 20 });
+    var e = el('input', { type: 'email', placeholder: 'Email' });
+    var p = el('input', { type: 'password', placeholder: 'Пароль (мин. 6)' });
+    var msg = el('p', { className: 'pf-err' });
+
+    async function login() {
+      var r = await sb.auth.signInWithPassword({ email: e.value.trim(), password: p.value });
+      if (r.error) { msg.className = 'pf-err'; msg.textContent = r.error.message; } else render();
+    }
+    async function register() {
+      if (!/^[A-Za-z0-9_]{3,20}$/.test(u.value)) {
+        msg.className = 'pf-err'; msg.textContent = 'Имя: 3–20 символов, латиница, цифры, _'; return;
+      }
+      var r = await sb.auth.signUp({
+        email: e.value.trim(), password: p.value, options: { data: { username: u.value } }
+      });
+      if (r.error) {
+        msg.className = 'pf-err';
+        msg.textContent = r.error.message.indexOf('Database error') !== -1 ? 'Это имя уже занято.' : r.error.message;
+        return;
+      }
+      if (!r.data.session) {
+        msg.className = ''; msg.textContent = 'Подтвердите email по письму, затем войдите.'; return;
+      }
+      render();
+    }
+    p.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') login(); });
+
+    return el('div', { className: 'pf-box' },
+      el('h3', { textContent: 'Вход / регистрация' }),
+      el('p', { textContent: 'Войдите, чтобы открыть свой профиль и публиковать фото.' }),
+      u, ' ', e, ' ', p, ' ',
+      el('button', { textContent: 'Войти', onclick: login }),
+      el('button', { textContent: 'Регистрация', onclick: register }),
+      msg);
+  }
+
+  // ---------- навигация ----------
+  function go(v) { view = v; render(); }
+
+  function nav() {
+    var d = el('div', { className: 'pf-nav' });
+    [['me', 'МОЙ ПРОФИЛЬ'], ['feed', 'ЛЕНТА'], ['people', 'ЛЮДИ']].forEach(function (t) {
+      d.append(el('button', {
+        className: 'pf-tab' + (view.type === t[0] ? ' on' : ''),
+        textContent: t[1],
+        onclick: function () { go({ type: t[0] }); }
+      }));
+    });
+    if (me) {
+      d.append(el('button', { className: 'pf-tab', textContent: 'ВЫЙТИ', onclick: async function () {
+        await sb.auth.signOut(); go({ type: 'me' });
+      }}));
+    }
+    return d;
+  }
+
+  // ---------- лента ----------
+  async function feedView() {
+    var posts = ok(await sb.from('photos')
+      .select('id,path,caption,profiles(username)')
+      .order('created_at', { ascending: false }).limit(24));
+    var box = el('div', { className: 'pf-box' }, el('h2', { textContent: 'Последние посты' }));
+    var grid = el('div', { className: 'pf-grid' });
+    posts.forEach(function (ph) {
+      var name = ph.profiles ? ph.profiles.username : '';
+      grid.append(el('div', {},
+        el('img', { src: photoUrl(ph.path), loading: 'lazy', alt: '' }),
+        el('p', { textContent: ph.caption || '' }),
+        name ? link('@' + name, function () { go({ type: 'user', name: name }); }) : ''));
+    });
+    box.append(posts.length ? grid : 'Пока нет постов.');
+    return box;
+  }
+
+  // ---------- люди ----------
+  async function peopleView() {
+    var users = ok(await sb.from('profiles').select('username')
+      .order('created_at', { ascending: false }).limit(200));
+    var box = el('div', { className: 'pf-box' }, el('h2', { textContent: 'Пользователи' }));
+    users.forEach(function (r) {
+      box.append(el('p', {}, link(r.username, function () { go({ type: 'user', name: r.username }); })));
+    });
+    if (!users.length) box.append('Пока никого нет.');
+    return box;
+  }
+
+  // ---------- форма нового поста ----------
+  function uploadBox() {
+    var f = el('input', { type: 'file', accept: 'image/jpeg,image/png,image/webp,image/gif' });
+    var c = el('input', { placeholder: 'Подпись к посту', maxLength: 200, size: 40 });
+    var msg = el('p', { className: 'pf-err' });
+    var b = el('button', { textContent: 'Опубликовать', onclick: async function () {
+      var file = f.files[0];
+      if (!file) { msg.textContent = 'Выберите фото.'; return; }
+      if (!/^image\/(jpeg|png|webp|gif)$/.test(file.type) || file.size > 5 * 1024 * 1024) {
+        msg.textContent = 'Нужна картинка (JPG, PNG, WEBP, GIF) до 5 МБ.'; return;
+      }
+      b.disabled = true; msg.textContent = 'Загрузка...';
+      try {
+        var ext = file.name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+        var path = me.id + '/' + uid() + '.' + ext;
+        var up = await sb.storage.from('photos').upload(path, file, { contentType: file.type });
+        if (up.error) throw up.error;
+        var ins = await sb.from('photos').insert({ user_id: me.id, path: path, caption: c.value });
+        if (ins.error) {
+          await sb.storage.from('photos').remove([path]);
+          throw ins.error;
+        }
+        render();
+      } catch (err) {
+        msg.textContent = 'Ошибка: ' + (err.message || err);
+        b.disabled = false;
+      }
+    }});
+    return el('div', { className: 'pf-box' },
+      el('h3', { textContent: 'Новый пост' }), f, el('br'), c, el('br'), b, msg);
+  }
+
+  // ---------- профиль ----------
+  async function profileView(name) {
+    var box = el('div');
+    if (!name) {
+      box.append(el('div', { className: 'pf-box', textContent: 'Профиль не найден. Попробуйте выйти и войти снова.' }));
+      return box;
+    }
+    var prof = ok(await sb.from('profiles').select('*').eq('username', name).maybeSingle());
+    if (!prof) {
+      box.append(el('div', { className: 'pf-box', textContent: 'Пользователь не найден.' }));
+      return box;
+    }
+    var own = !!me && me.id === prof.id;
+
+    var head = el('div', { className: 'pf-box' },
+      el('h2', { textContent: prof.username }),
+      el('p', { textContent: prof.bio || 'Пока ничего о себе не рассказал(а).' }));
+    if (own) {
+      var bio = el('textarea', { rows: 3, cols: 50, maxLength: 500, value: prof.bio || '', placeholder: 'О себе' });
+      var bmsg = el('p', { className: 'pf-err' });
+      head.append(bio, el('br'), el('button', { textContent: 'Сохранить', onclick: async function () {
+        var r = await sb.from('profiles').update({ bio: bio.value }).eq('id', me.id);
+        if (r.error) bmsg.textContent = 'Ошибка: ' + r.error.message; else render();
+      }}), bmsg);
+    }
+    box.append(head);
+    if (own) box.append(uploadBox());
+
+    var photos = ok(await sb.from('photos').select('*')
+      .eq('user_id', prof.id).order('created_at', { ascending: false }));
+    var grid = el('div', { className: 'pf-grid' });
+    photos.forEach(function (ph) {
+      var c = el('div', {},
+        el('img', { src: photoUrl(ph.path), loading: 'lazy', alt: '' }),
+        el('p', { textContent: ph.caption || '' }));
+      if (own) {
+        c.append(el('button', { className: 'pf-del', textContent: 'Удалить', onclick: async function () {
+          if (!confirm('Удалить этот пост?')) return;
+          var d = await sb.from('photos').delete().eq('id', ph.id);
+          if (d.error) { alert('Ошибка: ' + d.error.message); return; }
+          await sb.storage.from('photos').remove([ph.path]);
+          render();
+        }}));
+      }
+      grid.append(c);
+    });
+    box.append(el('div', { className: 'pf-box' },
+      el('h3', { textContent: 'Посты (' + photos.length + ')' }),
+      photos.length ? grid : 'Постов пока нет.'));
+    return box;
+  }
+
+  // ---------- отрисовка ----------
+  async function render() {
+    var t = ++token;
+    try {
+      await loadMe();
+      var content;
+      if (view.type === 'feed') content = await feedView();
+      else if (view.type === 'people') content = await peopleView();
+      else if (view.type === 'user') {
+        content = el('div', {}, link('← Назад', function () { go({ type: 'people' }); }),
+                    await profileView(view.name));
+      }
+      else content = me ? await profileView(myName) : authBox();
+      if (t !== token) return;
+      body.replaceChildren(nav(), content);
+    } catch (e) {
+      if (t === token) {
+        body.replaceChildren(el('p', { className: 'pf-err', textContent: 'Ошибка: ' + (e && e.message ? e.message : e) }));
+      }
+    }
+  }
+})();
+</script>
+</body>
+</html>
